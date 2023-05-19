@@ -1,21 +1,18 @@
+import os
 import multiprocessing as mp
 from multiprocessing import Pool
 import functools
+
 from timeit import timeit
 import numpy as np
-import os
+
 import matplotlib.pyplot as plt
-
-#import cProfile
-
-from pyinstrument import Profiler
 
 # ensure not to oversubscribe the CPU cores
 os.environ["OMP_NUM_THREADS"] = "1"
 
-# 
 nmax_cores = mp.cpu_count()
-print(f"Max number of cores: {nmax_cores}")
+#print(f"Max number of cores: {nmax_cores}")
 
 def calculate_pi(darts):
     """approximate pi by throwing darts at a board"""
@@ -41,28 +38,29 @@ def calculate_pi_parallel_reduce(darts_per_process, Ncores):
   return functools.reduce(combine_operator, results)/Ncores
   #return functools.reduce(lambda a, b: a+b, results)/Ncores
 
-N = 100000
+if __name__=="__main__":
 
-#prof = cProfile.Profile()
-profiler = Profiler()
+  # total number of darts to distribute across the procs: do some experiemtn
+  # TODO: try different values of N for elapsed times
+  
+  N = 10000000
 
-darts_per_process = 2500000
-Ncores = 8
+  # iterate over several Ncores
+  Ncores = range(1, 8)
+  times = np.array([timeit(lambda: calculate_pi_parallel_reduce(int(N/Nc), Nc), number=1) for Nc in Ncores])
 
-#profiler.start()
-a = calculate_pi_parallel(darts_per_process, Ncores)
-print(a)
-#profiler.stop()
+  # strong scaling
+  #plt.gca().set(xlabel='Ncores', ylabel='Time, sec', xticks=Ncores)
+  #plt.plot(Ncores, times)
+  #plt.show()
 
-#a = calculate_pi_parallel_reduce(darts_per_process, Ncores)
-#print(a)
+  # actual speedup vs theoretical (linear strong scaling)
+  speedup = times[0]/times
+  plt.plot(Ncores, Ncores, 'o-', label='theoretical')
+  plt.plot(Ncores, speedup, 'v-', label='actual')
+  plt.gca().set(xlabel='Ncores', ylabel='Speedup', xticks=Ncores, yticks=Ncores)
+  plt.grid()
+  plt.legend()
+  plt.show()
 
-#prof.print_stats()
-#profiler.print()
-Ncores = range(1,8)
-times = np.array([timeit(lambda: calculate_pi_parallel_reduce(int(N/Nc), Nc), number=1) for Nc in Ncores])
-plt.plot(Ncores, times)
-plt.show()
 
-#t = timeit(lambda: calculate_pi(N), number=100)
-#print(t)
