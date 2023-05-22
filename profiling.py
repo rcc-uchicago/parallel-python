@@ -3,10 +3,15 @@ import numpy as np
 import multiprocessing as mp
 from timeit import timeit
 import cProfile
+import pandas as pd
 from pyinstrument import Profiler
 
 a = np.random.normal(size=(2000, 1000)).astype('float32')
 b = np.random.normal(size=(1000, 200)).astype('float32')
+
+def read_file(filename, iterations):
+  df = pd.read_csv(filename)
+  print(df.to_string())
 
 def iterate(N):
   for i in range(N):
@@ -22,6 +27,12 @@ def calculate_pi(darts):
 
 if __name__=="__main__":
 
+
+  start = time.time()
+  read_file('iris.csv')
+  end =  time.time()
+  print('Read a file (seconds): ', end - start)
+
   # Total number of darts
   # TODO: try different values of N for elapsed times
   N = 10000000
@@ -29,7 +40,7 @@ if __name__=="__main__":
   start = time.time()
   a = calculate_pi(N)
   end =  time.time()
-  print('Elapsed time in seconds: ', end - start)
+  print('Compute pi (seconds): ', end - start)
   
   # using timeit
   #t = timeit(lambda: calculate_pi(N), number=100)
@@ -44,6 +55,7 @@ if __name__=="__main__":
 
   # using pyinstrument
   profiler = Profiler()
+
   profiler.start()
   a = calculate_pi(N)
   print(a)

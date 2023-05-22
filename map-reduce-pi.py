@@ -39,7 +39,6 @@ def calculate_pi_serial(darts, queue):
 def calculate_pi_parallel(darts_per_process, Ncores):
   with Pool(Ncores) as pool:
     results = pool.map(calculate_pi, [darts_per_process for i in range(Ncores)])
-  results.wait()
   return np.sum(results)/Ncores
 
 # calculate pi with queue
