@@ -1,9 +1,10 @@
+# running with pdb: python3 -m pdb profiling.py
 import time
 import numpy as np
 import multiprocessing as mp
-from timeit import timeit
-import cProfile
 import pandas as pd
+
+#import cProfile
 from pyinstrument import Profiler
 
 a = np.random.normal(size=(2000, 1000)).astype('float32')
@@ -26,7 +27,6 @@ def calculate_pi(darts):
     return 4*np.sum(r_sq<1)/darts
 
 if __name__=="__main__":
-
 
   start = time.time()
   read_file('iris.csv')

@@ -3,9 +3,14 @@
 import time, os
 from threading import Thread, current_thread
 from multiprocessing import Process, current_process
+import pandas as pd
 
 COUNT = 200000000
-SLEEP = 10
+SLEEP = 5
+
+def read_file(filename):
+  df = pd.read_csv(filename)
+  #print(df.to_string())
 
 def io_bound(sec):
 
@@ -16,6 +21,7 @@ def io_bound(sec):
 
   # sleep() is used to model IO bound executations where the CPU is idle
   time.sleep(sec)
+  #read_file('iris.csv')
 
   print(f"{pid} * {processName} * {threadName} 	---> Finished sleeping...")
 

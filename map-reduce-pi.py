@@ -1,21 +1,15 @@
+
+import os
+import numpy as np
 import multiprocessing as mp
 from multiprocessing import Pool, Process
 import functools
-from timeit import timeit
-import numpy as np
-import os
-import matplotlib.pyplot as plt
 
 #import cProfile
-
 from pyinstrument import Profiler
 
 # ensure not to oversubscribe the CPU cores
 os.environ["OMP_NUM_THREADS"] = "1"
-
-# max number of cores
-nmax_cores = mp.cpu_count()
-print(f"Max number of cores: {nmax_cores}")
 
 def calculate_pi(darts):
     """approximate pi by throwing darts at a board"""
@@ -25,6 +19,12 @@ def calculate_pi(darts):
     r_sq = x**2 + y**2
     return 4*np.sum(r_sq<1)/darts
 
+# brute force reduction
+def calculate_pi_parallel(darts_per_process, Ncores):
+  with Pool(Ncores) as pool:
+    results = pool.map(calculate_pi, [darts_per_process for i in range(Ncores)])
+  return np.sum(results)/Ncores
+
 # put the result in a queue instead of returning
 def calculate_pi_serial(darts, queue):
     """approximate pi by throwing darts at a board"""
@@ -33,13 +33,6 @@ def calculate_pi_serial(darts, queue):
     y = np.random.uniform(-1, 1, darts)
     r_sq = x**2 + y**2
     queue.put(4*np.sum(r_sq<1)/darts)
-
-
-# brute force reduction
-def calculate_pi_parallel(darts_per_process, Ncores):
-  with Pool(Ncores) as pool:
-    results = pool.map(calculate_pi, [darts_per_process for i in range(Ncores)])
-  return np.sum(results)/Ncores
 
 # calculate pi with queue
 def calculate_pi_parallel_queue(darts_per_process, Ncores):
@@ -71,6 +64,11 @@ def calculate_pi_parallel_reduce(darts_per_process, Ncores):
   #return functools.reduce(lambda a, b: a+b, results)/Ncores
 
 if __name__=="__main__":
+
+  # max number of cores
+  nmax_cores = mp.cpu_count()
+  print(f"Max number of cores: {nmax_cores}")
+
 
   N = 10000000
   Ncores = 4
