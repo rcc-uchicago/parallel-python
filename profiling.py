@@ -4,13 +4,14 @@ import numpy as np
 import multiprocessing as mp
 import pandas as pd
 
+#from timeit import timeit
 #import cProfile
 from pyinstrument import Profiler
 
 a = np.random.normal(size=(2000, 1000)).astype('float32')
 b = np.random.normal(size=(1000, 200)).astype('float32')
 
-def read_file(filename, iterations):
+def read_file(filename):
   df = pd.read_csv(filename)
   print(df.to_string())
 
@@ -43,7 +44,7 @@ if __name__=="__main__":
   print('Compute pi (seconds): ', end - start)
   
   # using timeit
-  #t = timeit(lambda: calculate_pi(N), number=100)
+  #t = timeit(lambda: calculate_pi(N), number=10)
   #print(f'Average elapsed time in seconds {t}')
 
   # using cProfile
