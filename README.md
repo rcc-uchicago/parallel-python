@@ -2,9 +2,12 @@
 Parallel programming with Python exercises
 
 On Midway3, with an interactive job
-
+```
   module load python/anaconda-2021.05 openmpi/4.1.2+gcc-7.4.0
   source activate parallel
+```
+
+This repo contains the following items:
 
 Exercises:
 
