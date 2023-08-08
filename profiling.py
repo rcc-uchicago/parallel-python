@@ -13,7 +13,7 @@ b = np.random.normal(size=(1000, 200)).astype('float32')
 
 def read_file(filename):
   df = pd.read_csv(filename)
-  print(df.to_string())
+  #print(df.to_string())
 
 def iterate(N):
   for i in range(N):
