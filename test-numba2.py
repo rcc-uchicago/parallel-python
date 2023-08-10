@@ -1,3 +1,4 @@
+# Demo: numba with different on-the-fly optimization
 #https://towardsdatascience.com/supercharging-numpy-with-numba-77ed5b169240
 
 from numba import njit

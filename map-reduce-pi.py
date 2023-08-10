@@ -1,4 +1,5 @@
 
+# Demo: Map/reduce with multiprocessing
 import os
 import numpy as np
 import multiprocessing as mp

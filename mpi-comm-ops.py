@@ -1,3 +1,4 @@
+# Demo: Point-to-point and collective communications with mpi4py
 from mpi4py import MPI
 import numpy as np
 import sys

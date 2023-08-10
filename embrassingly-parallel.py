@@ -1,3 +1,4 @@
+# Demo: embarrassingly parallel runs with mpi4py
 import os
 import sys
 from mpi4py import MPI

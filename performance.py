@@ -1,3 +1,4 @@
+# Demo: Strong scaling performance with multiprocessing
 import os
 import multiprocessing as mp
 from multiprocessing import Pool

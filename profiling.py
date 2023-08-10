@@ -1,3 +1,4 @@
+# Demo: using profiling tools time and pyinstrument
 # running with pdb: python3 -m pdb profiling.py
 import time
 import numpy as np

@@ -1,3 +1,4 @@
+# Demo: numba with different decorators for on-the-fly optimization
 from numba import(jit, vectorize, float32)
 
 import numpy as np
