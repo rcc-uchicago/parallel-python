@@ -19,7 +19,7 @@ def calculate_pi(darts):
     r_sq = x**2 + y**2
     return 4*np.sum(r_sq<1)/darts
 
-# brute force reduction
+# brute force reduction with map/reduce
 def calculate_pi_parallel(darts_per_process, Ncores):
   with Pool(Ncores) as pool:
     results = pool.map(calculate_pi, [darts_per_process for i in range(Ncores)])
@@ -47,28 +47,32 @@ def calculate_pi_parallel_queue(darts_per_process, Ncores):
   for p in processes:
     p.join()
 
-  # get the result from the queues
+  # get the result from the queues: brute-force tallying across the queues
   total = 0
   for q in queue:
     total += q.get()
   return np.sum(total)/Ncores
 
-# generalized combination for reduction
+# generalized operator used for reduction
 def combine_operator(a, b):
   return (a + b)
 
+# map with pool and reduce with functools
 def calculate_pi_parallel_reduce(darts_per_process, Ncores):
+  # create a process pool with Ncores processes
+  # then map the function calculate_pi with each of the Ncores argument sets
   with Pool(Ncores) as pool:
     results = pool.map(calculate_pi, [darts_per_process for i in range(Ncores)])
+  # finally reduce the results using the operator defined above
   return functools.reduce(combine_operator, results)/Ncores
   #return functools.reduce(lambda a, b: a+b, results)/Ncores
 
 if __name__=="__main__":
 
-  # max number of cores
+  # show the max number of cores on the node,
+  # not nessarily the available cores allocated to the job
   nmax_cores = mp.cpu_count()
   print(f"Max number of cores: {nmax_cores}")
-
 
   N = 10000000
   Ncores = 4
