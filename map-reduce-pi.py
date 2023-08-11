@@ -9,9 +9,6 @@ import functools
 #import cProfile
 from pyinstrument import Profiler
 
-# ensure not to oversubscribe the CPU cores
-os.environ["OMP_NUM_THREADS"] = "1"
-
 def calculate_pi(darts):
     """approximate pi by throwing darts at a board"""
     np.random.seed() # we need to set the random seed... see what happens if you comment this line out
