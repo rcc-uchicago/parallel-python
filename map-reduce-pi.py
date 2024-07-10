@@ -17,10 +17,31 @@ def calculate_pi(darts):
     r_sq = x**2 + y**2
     return 4*np.sum(r_sq<1)/darts
 
-# brute force reduction with map/reduce
+'''
+   an example of functions with multiple arguments that require Pool.starmap()
+'''
+def calculate_pi_multiargs(darts, params):
+    """approximate pi by throwing darts at a board"""
+    np.random.seed() # we need to set the random seed... see what happens if you comment this line out
+    x = np.random.uniform(-1, 1, darts)
+    y = np.random.uniform(-1, 1, darts)
+    r_sq = x**2 + y**2
+    return 4*np.sum(r_sq<1)/darts
+
+# brute force reduction with map
 def calculate_pi_parallel(darts_per_process, Ncores):
   with Pool(Ncores) as pool:
-    results = pool.map(calculate_pi, [darts_per_process for i in range(Ncores)])
+      results = pool.map(calculate_pi, [darts_per_process for i in range(Ncores)])
+  return np.sum(results)/Ncores
+
+# brute force reduction with starmap for functions with multiple arguments
+def calculate_pi_parallel_multiargs(darts_per_process, Ncores):
+  with Pool(Ncores) as pool:
+      # args is a list of Ncores tuples, each tuple contains the arguments passed to the function executed by a worker
+      args = []
+      for i in range(Ncores):
+          args.append((darts_per_process, i))
+      results = pool.starmap(calculate_pi_multiargs, args)
   return np.sum(results)/Ncores
 
 # put the result in a queue instead of returning
@@ -79,8 +100,9 @@ if __name__=="__main__":
   #profiler.start()
   #a = calculate_pi_parallel_queue(darts_per_process, Ncores)
   #print(a)
-  
-  a = calculate_pi_parallel_reduce(N//Ncores, Ncores)
+  print(f"Using {Ncores} processes")
+  #a = calculate_pi_parallel_reduce(N//Ncores, Ncores)
+  a = calculate_pi_parallel_multiargs(N//Ncores, Ncores)
   print(a)
 
   #profiler.stop()
