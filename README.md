@@ -19,6 +19,14 @@ and then create your own env:
   conda env create -f my-parallel-env.yml
 ```
 
+On your own machine or own space, you can do
+```
+   python3 -m venv parallel_env
+   source parallel_env/bin/activate
+   pip install matplotlib numba pandas pyinstrument timebudget
+   export MPICC=`which mpicc`; pip install mpi4py --no-cache
+```
+
 This repo contains the following items:
 
 Exercises discussed in the workshop:
